@@ -1,0 +1,196 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>State Management</title><link rel="stylesheet" href="src.4a46e35b.css"></head><body> <div class="reveal"> <div class="slides"> <section data-markdown="" data-separator="^\r?\n---\r?\n$" data-separator-vertical="^\r?\n----\r?\n$" data-separator-notes="^Note:"> <script type="text/template">
+            # State Management
+
+            Presenter: _Ryan Sheehan_
+
+            ---
+
+            ## The Scenario
+
+            > Online incident management with self-reporting resolution.
+
+            ----
+
+            ![List Page](assets/sm_scenario_list.png)<!-- .element: height="600px"; -->
+
+            ----
+
+            ![List Page](assets/sm_scenario_item.png)<!-- .element: height="600px"; -->
+
+            ----
+
+            ## Implementation Approach
+
+            * service to manage incident list
+              * loading
+              * mark incident as resolved              
+            * component manages file upload
+            * component manages sign-off
+
+            ----
+
+            ## New Requirement
+
+            ![lumbergh](assets/lumbergh.jpg)<!-- .element: height="200px"-->
+
+            > Users may take a few days to update an incident. Let's implement an autosave to prevent lost work.
+
+            ----
+
+            ## Exponential Complexity
+
+            * issue resolution is independent of data entry
+            * user closes issues before upload finishes'
+            * list updates asynchronously 
+            * issues could be marked as resolved before images finish uploading
+            * user could delete images after issue is marked as resolved
+
+            ----
+
+            ## Brain Hurts
+
+            ![Brain Hurts](assets/brain-hurt.webp)
+
+            ---
+
+            ## State Management
+
+            > You've been doing it all along.  But it can be done better.
+
+            ----
+
+            ## Advantages
+
+            * centralize business logic (dumber components)
+            * event hooks for ui and workflow
+            * optimize client-side performance
+            * help catch errors
+            * makes testing easier
+
+            ----
+
+            ## Disadvantages
+
+            * more layers of abstraction
+            * increases app complexity
+
+            ----
+
+            ![Dumb Idea](assets/dumb-idea.webp)
+
+            ----
+
+            ## Development Assumption
+
+            > Apps grow in complexity over time.  State management helps manage the complexity as feature sets grow.
+
+            ---
+
+            ## Redux
+
+            [Redux Docs](https://redux.js.org/)
+
+            * One of many systems for managing state
+            * Born from the React world
+            * framework independent
+            * Ecosystem of tools
+
+            ----
+
+            ## Redux Flow
+            <!-- .slide: data-background="#f0f0f0" -->
+            ![Redux Flow](assets/redux-flow.png)
+
+            ----
+
+            ## Store
+
+            * holds the _state_ for the whole application in a single object tree
+            * immutable   
+            * Application reacts to the _state_ 
+
+            ----
+
+            ## Actions
+
+            > ... you can think of an action as an event that describes something that happened in the application
+
+            * simple object minimally defined by a `type`
+            * describes an event that occur
+            * sometimes has payload data
+
+            ----
+
+            ## Reducer
+
+            > A plain function that receives actions and the current state, and produces a new state object
+
+            ---
+
+            ## Angular Based Libraries
+
+            * [NgRx](https://ngrx.io/)
+            * [NgXS](https://www.ngxs.io/)
+            * [Akita](https://datorama.github.io/akita/)
+
+            ----
+
+            ## NgRx
+
+            * Redux implementation targeting Angular
+            * Isolates side effects
+            * Integrates with angular router
+            * Compatible with [Redux DevTools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en_)
+
+            ----
+
+            ![NgRx Flow](assets/ngrx-flow.png)
+
+            ----
+
+            ## Effects
+
+            * Manages asynchronous flow
+            * Watches for actions, and produces one or more new actions
+            * Example: LoadData Action
+
+            ----
+
+            ## Selectors
+
+            * memoized functions that react to state changes
+            * observable
+            * good for derived values
+              * states: `uninitialized`, `loading`, `loaded`, `saving`, `error`
+              * selector: `isBusy`
+
+            ---
+
+            ## One More Layer
+
+            ![Layers](assets/ogre-layers.webp)
+
+            ----
+
+            ## Façade Pattern
+
+            * Is an Angular service
+            * Acts as the inbound/outbound proxy to the store
+            * Unifies in-bound and out-bound flow for consuming components
+            * Update routes
+            * Components don't need to understand actions
+
+            ----
+
+            ## Api Service
+
+            * manages just api calls
+            * transforms http errors to logical errors
+
+            ---
+
+            ## Redux DevTools Demo
+
+            ![Sounds Like Fun](assets/sounds-like-fun.webp)
+
+          </script> </section> </div> </div> <script src="src.3120d528.js"></script> </body></html>
